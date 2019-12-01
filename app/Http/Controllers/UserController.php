@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Abraham\TwitterOAuth\TwitterOAuth;
 use App\User;
 use App\Follow;
 use App\SocialLoginProfile;
@@ -100,6 +101,29 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['status' => ':ok']);
+    }
+
+    public function useTwitterAvatar() {
+        $user = Auth::user();
+        $connection = new TwitterOAuth(
+            config('trwl.twitter_id'),
+            config('trwl.twitter_secret'),
+            $user->socialProfile->twitter_token,
+            $user->socialProfile->twitter_tokenSecret
+        );
+
+        $getInfo = $connection->get('users/show', ['user_id' => $user->socialProfile->twitter_id]);
+        $url = $getInfo->profile_image_url_https;
+        $url = str_replace('_normal', '', $url); // without the _normal, twitter will deliver the fullsize avatar image
+
+        $filename =  'twitter_' . $user->username . time() . '.' . pathinfo($url)['extension']; 
+        $image = file_get_contents($url);
+        file_put_contents(public_path('/uploads/avatars/' . $filename), $image);
+        
+        $user->avatar = $filename;
+        $user->save();
+
+        return redirect()->back();
     }
 
     //Return Settings-page

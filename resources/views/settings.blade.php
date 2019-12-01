@@ -19,13 +19,19 @@
                                     <img src="{{ route('account.showProfilePicture', ['username' => $user->username]) }}" style="max-width: 96px" alt="{{__('settings.picture')}}" class="pb-2" id="theProfilePicture" />
                                 </div>
 
-                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#uploadAvatarModal">{{__('settings.upload-image')}}</a>
+                                <div>
+                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#uploadAvatarModal">{{__('settings.upload-image')}}</a>
+                                </div>
 
                                 @error('avatar')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+
+                                @if($user->socialProfile != null && $user->socialProfile->twitter_id != null)
+                                    <a href="{{ route('settings.grabTwitterAvatar') }}">Twitter-Avatar verwenden</a>
+                                @endif
                             </div>
                         </div>
 

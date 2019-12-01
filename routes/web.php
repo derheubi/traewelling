@@ -129,6 +129,10 @@ Route::middleware(['auth', 'privacy'])->group(function() {
         'uses' => 'UserController@uploadImage',
         'as'   => 'settings.upload-image'
     ]);
+    Route::get('/settings/useTwitterAvatarAsProfileImage', [
+        'uses' => 'UserController@useTwitterAvatar',
+        'as'   => 'settings.grabTwitterAvatar'
+    ]);
 
     Route::get('/settings/delsession', [
         'uses' => 'UserController@deleteSession',
