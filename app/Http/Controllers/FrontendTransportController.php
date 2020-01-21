@@ -12,6 +12,14 @@ class FrontendTransportController extends Controller
         $TrainAutocompleteResponse = TransportBackend::TrainAutocomplete($station);
         return response()->json($TrainAutocompleteResponse);
     }
+    public function TrainStationByLocation(Request $request) {
+        $r = $request->validate([
+            "lat" => "required|numeric",
+            "lng" => "required|numeric"
+        ]);
+        // return response()->json($r);
+        return response()->json(TransportController::getStationByLocation($r["lat"], $r["lng"]));
+    }
 
     public function BusAutocomplete($station) {
         $BusAutocompleteResponse = TransportBackend::BusAutocomplete($station);

@@ -232,6 +232,10 @@ Route::middleware(['auth', 'privacy'])->group(function() {
         'uses'  => 'FrontendTransportController@TrainAutocomplete',
         'as'    => 'transport.train.autocomplete',
     ]);
+    Route::get('/transport/train/location', [
+        'uses'  => 'FrontendTransportController@TrainStationByLocation',
+        'as'    => 'transport.train.location',
+    ]);
 
     Route::get('/transport/bus/autocomplete/{station}', [
         'uses'  => 'FrontendTransportController@BusAutocomplete',

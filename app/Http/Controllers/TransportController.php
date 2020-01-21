@@ -42,6 +42,20 @@ class TransportController extends Controller
         }
         return $array;
     }
+    
+    public static function getStationByLocation($lat, $lng) {
+        $client = new Client(['base_uri' => config('trwl.db_rest')]);
+        $response = $client->get("stations", [
+            "query" => [
+                "coordinates.latitude" => $lat,
+                "coordinates.longitude" => $lng
+            ]
+        ]);
+        $json = $response->getBody()->getContents();
+        $array = json_decode($json);
+        dd($array);
+        return $response;
+    }
 
     public static function BusAutocomplete($station) {
         $client = new Client(['base_uri' => config('trwl.flix_rest')]);

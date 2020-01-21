@@ -2,14 +2,34 @@
 // schon mal was zum Zeigen hat, auch wenn noch kein AJAX-Request passiert ist.
 // Liste: https://de.wikipedia.org/wiki/Liste_der_Gro%C3%9Fst%C3%A4dte_in_Deutschland#Tabelle
 const popularStations = [
-    'Hamburg Hbf', 'Berlin Hbf', 'München Hbf', 'Köln Hbf', 'Frankfurt(Main)Hbf', 'Stuttgart Hbf',
-    'Düsseldorf Hbf', 'Leipzig Hbf', 'Dortmund Hbf', 'Essen Hbf', 'Bremen Hbf', 'Dresden Hbf',
-    'Hannover Hbf', 'Nürnberg Hbf', 'Duisburg Hbf', 'Bochum Hbf', 'Wuppertal Hbf', 'Bielefeld Hbf',
-    'Bonn Hbf', 'Münster Hbf', 'Karlsruhe Hbf', 'Mannheim Hbf', 'Augsburg Hbf', 'Wiesbaden Hbf',
-    'Mönchengladbach Hbf'
+    "Hamburg Hbf",
+    "Berlin Hbf",
+    "München Hbf",
+    "Köln Hbf",
+    "Frankfurt(Main)Hbf",
+    "Stuttgart Hbf",
+    "Düsseldorf Hbf",
+    "Leipzig Hbf",
+    "Dortmund Hbf",
+    "Essen Hbf",
+    "Bremen Hbf",
+    "Dresden Hbf",
+    "Hannover Hbf",
+    "Nürnberg Hbf",
+    "Duisburg Hbf",
+    "Bochum Hbf",
+    "Wuppertal Hbf",
+    "Bielefeld Hbf",
+    "Bonn Hbf",
+    "Münster Hbf",
+    "Karlsruhe Hbf",
+    "Mannheim Hbf",
+    "Augsburg Hbf",
+    "Wiesbaden Hbf",
+    "Mönchengladbach Hbf"
 ];
-(function () {
-    const input = document.getElementById('station-autocomplete');
+(function() {
+    const input = document.getElementById("station-autocomplete");
     if (input == null) {
         return;
     }
@@ -17,9 +37,9 @@ const popularStations = [
     window.awesomplete = new Awesomplete(input, {
         minChars: 2,
         autoFirst: true,
-        list: popularStations,
+        list: popularStations
     });
-    input.addEventListener('keyup', (event) => {
+    input.addEventListener("keyup", event => {
         if (input.value.length < 5) return;
 
         // Hier können wir dann auch irgendwann die Flixbus-API einbauen,
@@ -32,10 +52,22 @@ const popularStations = [
                 window.awesomplete.list = json.map(d => {
                     return {
                         value: d.name,
-                        label: d.name + "",
+                        label: d.name + ""
                     };
                 });
             })
             .catch(error => console.error(error));
     });
 })();
+
+if ("geolocation" in navigator) {
+    const buttonGroup = document.getElementById("localize-me-button");
+    buttonGroup.classList.remove("d-none");
+    buttonGroup.addEventListener("click", e => {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            console.log(position.coords);
+        });
+    });
+} else {
+    console.log("Geolocation deaktiviert.");
+}

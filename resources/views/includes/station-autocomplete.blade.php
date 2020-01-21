@@ -12,14 +12,18 @@
 
                         <div class="input-group mb-2 mr-sm-2">
                             @php($user = Auth::user())
-                            <input type="text" id="station-autocomplete" name="station" class="form-control" placeholder="{{ __('stationboard.station-placeholder') }}" @isset(request()->station) value="{{request()->station}}" @endisset>
+                                <div class="input-group-prepend d-none" id="localize-me-button">
+                                    <span class="input-group-text"><i class="fas fa-satellite"></i></span>
+                                </div>
 
-                            @if($latest->count() > 0 || $user->home)
-                            <div class="input-group-append" id="history-button" title="{{__('stationboard.last-stations')}}">
-                                <span class="input-group-text" id="basic-addon2">
-                                    <i class="fa fa-history"></i>
-                                </span>
-                            </div>
+                                <input type="text" id="station-autocomplete" name="station" class="form-control" placeholder="{{ __('stationboard.station-placeholder') }}" @isset(request()->station) value="{{request()->station}}" @endisset>
+
+                                @if($latest->count() > 0 || $user->home)
+                                <div class="input-group-append" id="history-button" title="{{__('stationboard.last-stations')}}">
+                                    <span class="input-group-text" id="basic-addon2">
+                                        <i class="fa fa-history"></i>
+                                    </span>
+                                </div>
                             @endif
 
                         </div>
