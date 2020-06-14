@@ -111,10 +111,9 @@ class FrontendStatusController extends Controller
             'filetype' => 'required|in:json,csv,pdf'
         ]);
 
-        $export = StatusBackend::ExportStatuses($request->input('begin'),
+        return StatusBackend::ExportStatuses($request->input('begin'),
                                                 $request->input('end'),
                                                 $request->input('filetype'));
-        return $export;
     }
 
     public function getActiveStatuses() {

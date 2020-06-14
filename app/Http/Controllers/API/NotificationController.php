@@ -11,8 +11,7 @@ class NotificationController extends ResponseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index () {
         $notificationResponse = NotificationBackend::latest();
         return $this->sendResponse($notificationResponse);
     }
@@ -20,26 +19,23 @@ class NotificationController extends ResponseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $notificationID
+     * @param \Illuminate\Http\Request $request
+     * @param int $notificationID
      *
      * @return \Illuminate\Http\Response
      */
-    public function update($notificationID)
-    {
+    public function update ($notificationID) {
         return NotificationBackend::toggleReadState($notificationID);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $notificationID
+     * @param int $notificationID
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($notificationID)
-    {
-        $deleteNotificationResponse = NotificationBackend::destroy($notificationID);
-        return $deleteNotificationResponse;
+    public function destroy ($notificationID) {
+        return NotificationBackend::destroy($notificationID);
     }
 }

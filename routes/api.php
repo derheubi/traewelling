@@ -50,7 +50,7 @@ Route::group(['prefix' => 'v0', 'middleware' => 'return-json'], function (){
         // Controller for complete Train-Transport-Stuff
         Route::group(['prefix' => 'trains'], function() {
             Route::get('autocomplete/{station}', 'API\TransportController@TrainAutocomplete')->name('api.v0.checkin.train.autocomplete');
-            Route::get('stationboard', 'API\TransportController@TrainStationboard')->name('api.v0.checkin.train.stationboard');;
+            Route::get('stationboard', 'API\TransportController@TrainStationboard')->name('api.v0.checkin.train.stationboard');
             Route::get('trip', 'API\TransportController@TrainTrip')->name('api.v0.checkin.train.trip');
             Route::post('checkin', 'API\TransportController@TrainCheckin')->name('api.v0.checkin.train.checkin');
             Route::get('latest', 'API\TransportController@TrainLatestArrivals')->name('api.v0.checkin.train.latest');

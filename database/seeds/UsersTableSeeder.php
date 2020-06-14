@@ -11,17 +11,16 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run () {
         factory(App\User::class, 50)->create()->each(function ($u) {
             $u->save();
         });
         $user = new User([
-                          'username'          => 'Gertrud123',
-                          'name'              => 'Gertrud',
-                          'email'             => 'gertrud@traewelling.de',
-                          'email_verified_at' => now(),
-                          'password'          => Hash::make('thisisnotasecurepassword123')]);
+            'username' => 'Gertrud123',
+            'name' => 'Gertrud',
+            'email' => 'gertrud@traewelling.de',
+            'email_verified_at' => now(),
+            'password' => Hash::make('thisisnotasecurepassword123')]);
         $user->save();
     }
 }
