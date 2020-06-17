@@ -11,6 +11,11 @@
                         <label for="status-body">{{__('modals.editStatus-label')}}</label>
                         <textarea class="form-control" name="status-body" id="status-body" rows="5"></textarea>
                     </div>
+
+                    <div class="custom-control custom-checkbox custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="private_check" name="private_check">
+                        <label class="custom-control-label" for="private_check">{{__('stationboard.check-private')}}</label>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

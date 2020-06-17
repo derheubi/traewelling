@@ -63,12 +63,14 @@ class FrontendStatusController extends Controller
         $this->validate($request, [
             'body' => 'max:280',
             'businessCheck' => 'max:1',
+            'privateCheck' => 'max:1',
         ]);
         $editStatusResponse = StatusBackend::EditStatus(
             Auth::user(),
             $request['statusId'],
             $request['body'],
-            $request['businessCheck']
+            $request['businessCheck'],
+            $request['privateCheck']
         );
         if ($editStatusResponse === false) {
             return redirect()->back();

@@ -8,6 +8,8 @@ $(document).on("click", ".edit", function (event) {
     statusId = event.target.parentElement.dataset["statusid"];
     statusBody = document.getElementById("status-" + statusId).dataset["body"];
     $("#status-body").val(statusBody);
+    statusPrivate = document.getElementById("status-" + statusId).dataset["private"];
+    $("#private_check").prop("checked", statusPrivate == 1);
     $("#edit-modal").modal();
 });
 
@@ -19,6 +21,7 @@ $(document).on("click", "#modal-save", function () {
             body: $("#status-body").val(),
             statusId: statusId,
             businessCheck: $("#business_check:checked").length,
+            privateCheck: $("#private_check:checked").length,
             _token: token
         }
     }).done(function (msg) {

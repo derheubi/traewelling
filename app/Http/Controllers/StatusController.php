@@ -144,7 +144,7 @@ class StatusController extends Controller
         return true;
     }
 
-    public static function EditStatus ($user, $statusId, $body, $businessCheck) {
+    public static function EditStatus ($user, $statusId, $body, $businessCheck, $privateCheck) {
         $status = Status::find($statusId);
         if ($status === null) {
             return null;
@@ -154,6 +154,7 @@ class StatusController extends Controller
         }
         $status->body = $body;
         $status->business = $businessCheck >= 1 ? 1 : 0;
+        $status->private = $privateCheck >= 1 ? 1 : 0;
         $status->update();
         return $status->body;
     }
