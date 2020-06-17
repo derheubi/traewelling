@@ -5,6 +5,7 @@ return [
     "check-business" => "Business trip",
     "check-toot" => "Toot",
     "check-tweet" => "Tweet",
+    "check-private" => "Private Check-in",
     "dep" => "dep",
     "dep-time" => "Departure Time",
     "destination" => "Destination",

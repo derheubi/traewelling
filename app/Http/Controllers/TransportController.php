@@ -227,6 +227,7 @@ class TransportController extends Controller
                                         $businessCheck,
                                         $tweetCheck,
                                         $tootCheck,
+                                        $privateCheck,
                                         $eventId=0)
     {
         $hafas                 = self::getHAFAStrip($tripId, '')->getAttributes();
@@ -279,6 +280,7 @@ class TransportController extends Controller
         $status           = new Status();
         $status->body     = $body;
         $status->business = isset($businessCheck) && $businessCheck == 'on';
+        $status->private  = isset($privateCheck) && $privateCheck == 'on';
 
         $trainCheckin              = new TrainCheckin;
         $trainCheckin->trip_id     = $tripId;

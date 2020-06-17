@@ -5,6 +5,7 @@ return [
     "check-business" => "Geschäftliche Reise",
     "check-toot" => "Tooten",
     "check-tweet" => "Twittern",
+    "check-private" => "Privater Check-in",
     "dep" => "ab",
     "dep-time" => "Abfahrt",
     "destination" => "Ziel",

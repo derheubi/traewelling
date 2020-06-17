@@ -31,6 +31,10 @@
                         <span class="pl-2"><i class="fa fa-route d-inline"></i>&nbsp;{{number($status->trainCheckin->distance, 0)}}<small>km</small></span>
                         <span class="pl-2"><i class="fa fa-stopwatch d-inline"></i>&nbsp;{!! durationToSpan(secondsToDuration(strtotime($status->trainCheckin->arrival) - strtotime($status->trainCheckin->departure))) !!}</span>
 
+                        @if($status->private)
+                            <span class="pl-2"><i class="fa fa-lock d-inline"></i></span>
+                        @endif
+
                         @if($status->event != null)
                             <br class="d-sm-none">
                             <span class="pl-sm-2"><i class="fa fa-calendar-day"></i> <a href="{{ route('statuses.byEvent', ['slug' => $status->event->slug]) }}">{{ $status->event->name }}</a></span>

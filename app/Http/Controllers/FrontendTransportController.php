@@ -76,6 +76,7 @@ class FrontendTransportController extends Controller
             'business_check' => 'max:0', // Wenn wir Businesstrips wieder einbringen, kann man das wieder auf mehr stellen.
             'tweet_check' => 'max:2',
             'toot_check' => 'max:2',
+            'private_check' => 'max:2',
             'event' => 'integer'
         ]);
         $TrainCheckinResponse = TransportBackend::TrainCheckin(
@@ -87,6 +88,7 @@ class FrontendTransportController extends Controller
             $request->business_check,
             $request->tweet_check,
             $request->toot_check,
+            $request->private_check,
             $request->event
             );
 

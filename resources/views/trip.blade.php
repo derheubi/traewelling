@@ -87,6 +87,12 @@
                             @endif
                         @endif
 
+
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" class="custom-control-input" id="private_check" name="private_check">
+                                <label class="custom-control-label" for="private_check">{{__('stationboard.check-private')}}</label>
+                            </div>
+
                         @if($events->count() == 1)
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="event_check" name="event" value="{{ $events[0]->id }}">

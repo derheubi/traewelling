@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: "This is the REST API for Träwelling."
-  version: 0.5.1
+  version: 0.5.2
   title: "TRWL app API"
   contact:
     name: "Träwelling Dev Team"
@@ -579,6 +579,8 @@ paths:
                 tweet:
                   type: boolean
                 toot:
+                  type: boolean
+                private:
                   type: boolean
       responses:
         200:
@@ -1237,6 +1239,9 @@ components:
         type:
           type: string
           example: "hafas"
+        private:
+          type: boolean
+          description: Shows if this status is marked as private. You should not see private statuses from other users.
         event_id:
           type: integer
           nullable: true

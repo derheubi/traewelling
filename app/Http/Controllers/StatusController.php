@@ -297,7 +297,7 @@ class StatusController extends Controller
     }
 
     public static function usageByDay (Carbon $date) {
-        return Status::where("created_at", ">=", $date->copy()->startOfDay())
+        return Status::withoutGlobalScopes()->where("created_at", ">=", $date->copy()->startOfDay())
             ->where("created_at", "<=", $date->copy()->endOfDay())
             ->count();
     }

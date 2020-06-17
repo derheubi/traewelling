@@ -92,7 +92,8 @@ class TransportController extends ResponseController
             'destination' => 'required',
             'body' => 'max:280',
             'tweet' => 'boolean',
-            'toot' => 'boolean'
+            'toot' => 'boolean',
+            'private' => 'boolean'
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors(), 400);
@@ -106,7 +107,8 @@ class TransportController extends ResponseController
             auth()->user(),
             0,
             $request->input('tweet'),
-            $request->input('toot')
+            $request->input('toot'),
+            $request->input('private')
         );
 
         if ($trainCheckinResponse['success'] === false) {
