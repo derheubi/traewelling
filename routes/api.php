@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v0', 'middleware' => 'return-json'], function (){
         Route::group(['prefix' => 'user'], function() {
             Route::get('leaderboard', 'API\UserController@getLeaderboard')->name('api.v0.user.leaderboard');
             Route::get('{username}', 'API\UserController@show')->name('api.v0.user');
+            Route::get('search/{query}', 'API\UserController@searchUser')->name('api.v0.user.search');
             Route::get('{username}/active', 'API\UserController@active')->name('api.v0.user.active');
             Route::put('profilepicture', 'API\UserController@PutProfilepicture')->name('api.v0.user.profilepicture');
             Route::put('displayname', 'API\UserController@PutDisplayname')->name('api.v0.user.displayname');
@@ -38,9 +39,9 @@ Route::group(['prefix' => 'v0', 'middleware' => 'return-json'], function (){
         // Controller for complete /statuses-stuff
         Route::group(['prefix' => 'statuses'], function () {
             Route::get('enroute/all', 'API\StatusController@enroute')->name('api.v0.statuses.enroute');
-            Route::get('event/{slug}', 'API\StatusController@getByEvent')->name('api.v0.statuses.event');
+            Route::get('event/{statusId}', 'API\StatusController@getByEvent')->name('api.v0.statuses.event');
             Route::post('{statusId}/like', 'API\StatusController@createLike')->name('api.v0.statuses.like');
-            Route::delete('{statusId}/like', 'API\StatusController@destroyLike')->name('api.v0.statuses.like');
+            Route::delete('{statusId}/like', 'API\StatusController@destroyLike');
             Route::get('{statusId}/likes', 'API\StatusController@getLikes')->name('api.v0.statuses.likes');
         });
         Route::resource('statuses', 'API\StatusController', ['as' => 'api.v0']);
@@ -55,7 +56,7 @@ Route::group(['prefix' => 'v0', 'middleware' => 'return-json'], function (){
             Route::post('checkin', 'API\TransportController@TrainCheckin')->name('api.v0.checkin.train.checkin');
             Route::get('latest', 'API\TransportController@TrainLatestArrivals')->name('api.v0.checkin.train.latest');
             Route::get('home', 'API\TransportController@getHome')->name('api.v0.checkin.train.home');
-            Route::put('home', 'API\TransportController@setHome')->name('api.v0.checkin.train.home');
+            Route::put('home', 'API\TransportController@setHome');
             Route::get('nearby', 'API\TransportController@StationByCoordinates')->name('api.v0.trains.nearby');
         });
     });

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\SocialLoginProfile;
+use App\Models\SocialLoginProfile;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Validator,Redirect,Response,File;
 use Socialite;
-use App\User;
-use App\MastodonServer;
+use App\Models\User;
+use App\Models\MastodonServer;
 use Auth;
 use Mastodon;
 use GuzzleHttp\Exception\ClientException;
@@ -44,7 +45,7 @@ class SocialController extends Controller
             if (empty($server)) {
                 try {
                     //create new app
-                    $info = Mastodon::domain($domain)->createApp(config('trwl.mastodon_appname'), config('mastodon_redirect'), 'write read');
+                    $info = Mastodon::domain($domain)->createApp(config('trwl.mastodon_appname'), config('trwl.mastodon_redirect'), 'write read');
 
                     //save app info
                     $server = MastodonServer::create([
@@ -172,19 +173,33 @@ class SocialController extends Controller
     }
 
     public function destroyProvider(Request $request) {
-        $providerField = "{$request->provider}_id";
-        $user = Auth::user();
-        if ($user->password === null) {
+        $validated = $request->validate([
+                                            'provider' => ['required', Rule::in(['twitter', 'mastodon'])]
+                                        ]);
+
+        $user = auth()->user();
+        if ($user->password === null
+            && !($user->socialProfile->twitter_id !== null && $user->socialProfile->mastodon_id !== null)) {
             return response(__('controller.social.delete-set-password'), 406);
         }
 
-        $SocialLoginProfile = SocialLoginProfile::where('user_id', $user->id)->first();
-        if ($SocialLoginProfile === null) {
+        if ($user->socialProfile === null) {
             return response(__('controller.social.delete-never-connected'), 404);
         }
-        $SocialLoginProfile->{$providerField} = '';
-        $user->socialProfile()->save($SocialLoginProfile);
 
+        if ($validated['provider'] == "twitter") {
+            $user->socialProfile->update([
+                                             'twitter_id'          => null,
+                                             'twitter_token'       => null,
+                                             'twitter_tokenSecret' => null
+                                         ]);
+        } elseif ($validated['provider'] == "mastodon") {
+            $user->socialProfile->update([
+                                             'mastodon_id'     => null,
+                                             'mastodon_server' => null,
+                                             'mastodon_token'  => null
+                                         ]);
+        }
         return response(__('controller.social.deleted'), 200);
     }
 

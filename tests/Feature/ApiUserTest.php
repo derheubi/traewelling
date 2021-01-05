@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 Use \Illuminate\Support\Facades\File;
@@ -139,7 +139,7 @@ class ApiUserTest extends ApiTestCase
      */
     public function get_active_checkin_for_user() {
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->get(route('api.v0.user.active', ['Username' => 'Gertrud123']));
+            ->get(route('api.v0.user.active', ['username' => 'Gertrud123']));
         $response->assertOk();
         $this->assertFalse(empty(json_decode($response->getContent(), true)));
         //Somehow this throws an error even though the structure is the same.
@@ -215,5 +215,52 @@ class ApiUserTest extends ApiTestCase
             "kilometers"
         ]);
 
+    }
+
+    /**
+     * Test the user search
+     * @test
+     */
+    public function get_user_search() {
+        //Test that user has been found
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token,
+                                        'Accept'        => 'application/json'])
+                         ->get(route('api.v0.user.search', 'gertru'));
+        $response->assertOk();
+        $this->assertFalse(empty(json_decode($response->getContent(), true)));
+        $response->assertJsonStructure(['current_page',
+                                        'data' => [[
+                                                       "id",
+                                                       "name",
+                                                       "username",
+                                                       "train_distance",
+                                                       "train_duration",
+                                                       "points",
+                                                       "averageSpeed"
+                                                   ]],
+                                        'first_page_url',
+                                        'from',
+                                        'next_page_url',
+                                        'path',
+                                        'per_page',
+                                        'prev_page_url',
+                                        'to']);
+
+        //Test that an unknown user returns 200 and an empty json object
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token,
+                                        'Accept'        => 'application/json'])
+                         ->get(route('api.v0.user.search',
+                                     'sdfklghbqeörgjaösrjgäIERGKJAEFÖRGJSDÖFJHBÜÄAJRÄÜG'));
+        $response->assertOk();
+        $this->assertFalse(empty(json_decode($response->getContent(), true)));
+        $response->assertJsonStructure(['current_page',
+                                        'data' => [],
+                                        'first_page_url',
+                                        'from',
+                                        'next_page_url',
+                                        'path',
+                                        'per_page',
+                                        'prev_page_url',
+                                        'to']);
     }
 }

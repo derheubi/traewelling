@@ -12,7 +12,7 @@
                         <strong>{{ __('profile.statistics-for') }} {{ $user->name }}</strong> <small class="font-weight-light">{{ '@'.$user->username }}</small>
                         @if($currentUser)
                             @if($user->id !== $currentUser->id && Auth::check())
-                                @if(Auth::user()->follows->where('follow_id', $user->id)->first() === null)
+                                @if(Auth::user()->follows->where('id', $user->id)->first() === null)
                                     <a href="#" class="btn btn-sm btn-primary follow" data-userid="{{ $user->id }}" data-following="no">{{__('profile.follow')}}</a>
                                 @else
                                     <a href="#" class="btn btn-sm btn-danger follow" data-userid="{{ $user->id }}" data-following="yes">{{__('profile.unfollow')}}</a>
@@ -32,14 +32,14 @@
                         <span class="font-weight-bold pl-sm-2"><i class="fa fa-dice-d20 d-inline"></i>&nbsp;{{ $user->points }}</span><span class="small font-weight-lighter">{{__('profile.points-abbr')}}</span>
                         @if($twitterUrl)
                         <span class="font-weight-bold pl-sm-2">
-                            <a href="{{ $twitterUrl }}" rel="me" class="text-white">
+                            <a href="{{ $twitterUrl }}" rel="me" class="text-white" target="_blank">
                                 <i class="fab fa-twitter d-inline"></i>
                             </a>
                         </span>
                         @endif
                         @if($mastodonUrl)
                         <span class="font-weight-bold pl-sm-2">
-                            <a href="{{ $mastodonUrl }}" rel="me" class="text-white">
+                            <a href="{{ $mastodonUrl }}" rel="me" class="text-white" target="_blank">
                                 <i class="fab fa-mastodon d-inline"></i>
                             </a>
                         </span>
@@ -58,10 +58,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <header><h3>{{__('profile.last-journeys-of')}} {{ $user->name }}:</h3></header>
-                @foreach($statuses as $status)
-                    @include('includes.status')
-                @endforeach
-
+                @include('includes.statuses', ['statuses' => $statuses, 'showDates' => true])
             </div>
         </div>
         <div class="row justify-content-center mt-5">

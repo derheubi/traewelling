@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  * WHEN: A non-logged-in user tries to reach those pages
  * THEN: Show them to the user.
  */
-class StaticPagesThatMightHaveComputedPropertiesReturn200Test extends TestCase
+class StaticPagesThatMightHaveComputedPropertiesTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -55,7 +55,7 @@ class StaticPagesThatMightHaveComputedPropertiesReturn200Test extends TestCase
 
     public function testProfilePageGet() {
         // GIVEN: A gdpr-acked user
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $response = $this->actingAs($user)
                          ->post('/gdpr-ack');
         $response->assertStatus(302);
@@ -66,7 +66,7 @@ class StaticPagesThatMightHaveComputedPropertiesReturn200Test extends TestCase
 
         // THEN: The page is rendered and shows the user's name and username
         $response->assertOk();
-        $response->assertSee($user->name);
-        $response->assertSee($user->username);
+        $response->assertSee($user->name, false);
+        $response->assertSee($user->username, false);
     }
 }

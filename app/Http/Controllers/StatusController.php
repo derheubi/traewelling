@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\HafasTrip;
-use App\Like;
-use App\Status;
-use App\TrainCheckin;
-use App\TrainStations;
+use App\Exceptions\StatusAlreadyLikedException;
+use App\Models\HafasTrip;
+use App\Models\Like;
+use App\Models\Status;
+use App\Models\TrainCheckin;
+use App\Models\TrainStation;
+use App\Models\User;
 use App\Notifications\StatusLiked;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -97,27 +99,34 @@ class StatusController extends Controller
     }
 
     public static function getDashboard ($user) {
-        $userIds = $user->follows()->pluck('follow_id');
+        $userIds = $user->follows->pluck('id');
         $userIds[] = $user->id;
-        return Status::whereIn('user_id', $userIds)
-            ->with('user',
-                'trainCheckin',
-                'trainCheckin.Origin',
-                'trainCheckin.Destination',
-                'trainCheckin.HafasTrip')
+        return Status::with([
+                'event', 'likes', 'user', 'trainCheckin',
+                'trainCheckin.Origin', 'trainCheckin.Destination',
+                'trainCheckin.HafasTrip'
+            ])
+            ->join('train_checkins', 'train_checkins.status_id', '=', 'statuses.id')
+            ->select('statuses.*')
+            ->orderBy('train_checkins.departure', 'desc')
+            ->whereIn('user_id', $userIds)
             ->withCount('likes')
-            ->latest()->simplePaginate(15);
+            ->latest()
+            ->simplePaginate(15);
     }
 
     public static function getGlobalDashboard () {
-        return Status::orderBy('created_at', 'desc')
-            ->with('user',
-                'trainCheckin',
-                'trainCheckin.Origin',
-                'trainCheckin.Destination',
-                'trainCheckin.HafasTrip')
+        return Status::with([
+                'event', 'likes', 'user', 'trainCheckin',
+                'trainCheckin.Origin', 'trainCheckin.Destination',
+                'trainCheckin.HafasTrip'
+            ])
+            ->join('train_checkins', 'train_checkins.status_id', '=', 'statuses.id')
+            ->select('statuses.*')
+            ->orderBy('train_checkins.departure', 'desc')
             ->withCount('likes')
-            ->latest()->simplePaginate(15);
+            ->latest()
+            ->simplePaginate(15);
     }
 
     public static function DeleteStatus ($user, $statusId) {
@@ -132,15 +141,14 @@ class StatusController extends Controller
             return false;
         }
         $user->train_distance -= $trainCheckin->distance;
-        $user->train_duration -= (strtotime($trainCheckin->arrival) - strtotime($trainCheckin->departure)) / 60;
+        $user->train_duration -= $trainCheckin->duration;
 
         //Don't subtract points, if status outside of current point calculation
-        if (strtotime($trainCheckin->departure) >= date(strtotime('last thursday 3:14am'))) {
+        if ($trainCheckin->departure->isAfter(Carbon::parse('last thursday 3:14am'))) {
             $user->points -= $trainCheckin->points;
         }
         $user->update();
         $status->delete();
-        $trainCheckin->delete();
         return true;
     }
 
@@ -158,22 +166,25 @@ class StatusController extends Controller
         return $status->body;
     }
 
-    public static function CreateLike ($user, $statusId) {
-        $status = Status::findOrFail($statusId);
-        if (!$status) {
-            return null;
-        }
-        $like = $user->likes()->where('status_id', $statusId)->first();
-        if ($like) {
-            return false;
+    /**
+     * Create a Statuslike for a given User
+     * @param User $user
+     * @param Status $status
+     * @return Like
+     * @throws StatusAlreadyLikedException
+     */
+    public static function createLike(User $user, Status $status): Like {
+
+        if ($status->likes->contains('user_id', $user->id)) {
+            throw new StatusAlreadyLikedException($user, $status);
         }
 
-        $like = new Like();
-        $like->user_id = $user->id;
-        $like->status_id = $status->id;
-        $like->save();
+        $like = Like::create([
+                                 'user_id'   => $user->id,
+                                 'status_id' => $status->id
+                             ]);
         $status->user->notify(new StatusLiked($like));
-        return true;
+        return $like;
     }
 
     public static function DestroyLike ($user, $statusId) {

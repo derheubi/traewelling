@@ -1,17 +1,30 @@
 <?php
 
-/** @var Factory $factory */
+namespace Database\Factories;
 
-use App\Model;
-use App\TrainStations;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use App\Models\TrainStation;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(TrainStations::class, function (Faker $faker) {
-    return [
-        'ibnr'      => $faker->unique()->numberBetween(8000001, 8999999),
-        'name'      => $faker->unique()->city,
-        'latitude'  => $faker->latitude,
-        'longitude' => $faker->longitude
-    ];
-});
+class TrainStationFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = TrainStation::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition() {
+        return [
+            'ibnr'      => $this->faker->unique()->numberBetween(8000001, 8999999),
+            'name'      => $this->faker->unique()->city,
+            'latitude'  => $this->faker->latitude,
+            'longitude' => $this->faker->longitude
+        ];
+    }
+}

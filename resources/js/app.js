@@ -2,7 +2,7 @@
  * Here, we include all of our external dependencies
  */
 require("jquery");
-window.bsCustomFileInput = require("mdbootstrap/js/modules/bs-custom-file-input");
+
 require("./bootstrap");
 require("./appControls");
 require("awesomplete/awesomplete");
@@ -21,6 +21,5 @@ window.addEventListener("load", () => {
     require("./components/stationboard");
     require("./components/statusMap");
     require("./components/timepicker");
-    require("./components/status");
     require("bootstrap-cookie-alert/cookiealert");
 });

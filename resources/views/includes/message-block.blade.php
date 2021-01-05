@@ -42,6 +42,22 @@
         </div>
     @endif
 
+    @if($message = Session::get('mail-prompt'))
+            <div class="alert alert-info alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{!! $message !!}</strong>
+                <button class="btn btn-default" href="{{ route('verification.resend') }}"
+                        onclick="event.preventDefault(); document.getElementById('resend-mail-form').submit();">
+                    {{ __('controller.status.email-resend-mail') }}
+                </button>
+
+                <form id="resend-mail-form" action="{{ route('verification.resend') }}" method="POST"
+                      style="display: none;">
+                    @csrf
+                </form>
+            </div>
+    @endif
+
     @if(Session::has('message'))
         <div class="alert my-3 alert-info" role="alert">
             {!! Session::get('message') !!}
@@ -61,8 +77,8 @@
             @if(Session::get('checkin-success')['alsoOnThisConnection']->count() >= 1)
                 <p>{{ __('controller.transport.also-in-connection') }}</p>
                 <ul>
-                @foreach(Session::get('checkin-success')['alsoOnThisConnection'] as $person)
-                        <li><a href="{{ route('account.show', ['username' => $person->status->user->username]) }}">{{ '@' . $person->status->user->username }}</a></li>
+                @foreach(Session::get('checkin-success')['alsoOnThisConnection'] as $otherStatus)
+                        <li><a href="{{ route('account.show', ['username' => $otherStatus->user->username]) }}">{{ '@' . $otherStatus->user->username }}</a></li>
                 @endforeach
                 </ul>
             @endif
@@ -70,13 +86,13 @@
                 <p>
                     {!!  __('events.on-your-way', [
                         "name" => Session::get('checkin-success')['event']['name'],
-                        "url" => route('statuses.byEvent', ['event' => Session::get('checkin-success')['event']['slug']])
+                        "url" => route('statuses.byEvent', ['eventSlug' => Session::get('checkin-success')['event']['slug']])
                     ]) !!}
                 </p>
             @endif
             <hr>
             <p class="mb-0">
-                <i class="fa fa-stopwatch d-inline"></i>&nbsp;<b>{!! durationToSpan(secondsToDuration(Session::get('checkin-success')['duration'])) !!}</b>
+                <i class="fa fa-stopwatch d-inline"></i>&nbsp;<b>{!! durationToSpan(secondsToDuration(Session::get('checkin-success')['duration'] * 60)) !!}</b>
                 — <i class="fa fa-route d-inline"></i>&nbsp;<b>{{ number(Session::get('checkin-success')['distance']) }}<small>km</small></b>
                 — <i class="fa fa-dice-d20 d-inline"></i>&nbsp;<b>{{ Session::get('checkin-success')['points'] }}<small>{{__('profile.points-abbr')}}</small></b>
             </p>

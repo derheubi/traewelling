@@ -5,7 +5,7 @@ info:
   title: "TRWL app API"
   contact:
     name: "Träwelling Dev Team"
-    url: "https://gitlab.com/HerrLevin_/trwl"
+    url: "https://github.com/traewelling/traewelling"
 servers:
   - url: "https://testing.traewelling.de/api/v0"
   - url: "https://traewelling.de/api/v0"
@@ -596,6 +596,10 @@ paths:
                     type: number
                     example: 900
                     description: Travel time in Seconds
+                  statusId:
+                    type: number
+                    example: 34
+                    description: ID of the generated Status
                   points:
                     type: number
                     example: 1
@@ -878,6 +882,66 @@ paths:
           $ref: '#/components/responses/BadRequestError'
         406:
           $ref: '#/components/responses/GDPRError'
+  /user/search/{searchQuery}:
+    get:
+      security:
+        - bearerAuth: []
+      tags: [User profile]
+      summary: Searches for a user
+      parameters:
+        - in: path
+          name: searchQuery
+          schema:
+            type: string
+            example: 'jdo'
+          required: true
+          description: The query for the user search.
+      responses:
+        200:
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  first_page_url:
+                    type: string
+                    example: "https://traewelling.de/api/v0/user/search/jdo?page=1"
+                  from:
+                    type: integer
+                    example: 1
+                    description: Frist element on page
+                  next_page_url:
+                    type: string
+                    example: "https://traewelling.de/api/v0/user/search/jdo?page=2"
+                    nullable: true
+                  path:
+                    type: string
+                    example: "https://traewelling.de/api/v0/user/search/jdo"
+                  per_page:
+                    type: integer
+                    example: 5
+                  prev_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  to:
+                    type: integer
+                    example: 5
+                    description: Last element on page
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        406:
+          $ref: '#/components/responses/GDPRError'
   /getuser:
     get:
       security:
@@ -1022,6 +1086,9 @@ components:
         token:
           type: string
           example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImQxYjIzZGFlNTc0YzlhOTk3MzQ5MTQwMWZhNjRkMmU2MzgwNGQ4MWJhOTI0MjRlMmQ2ZmYyZjIyZjFiZmU1ZDUyOTExZjE0N2M4YWM5MTI3In0.eyJhdWQiOiIzIiwianRpIjoiZDFiMjNkYWU1NzRjOWE5OTczNDkxNDAxZmE2NGQyZTYzODA0ZDgxYmE5MjQyNGUyZDZmZjJmMjJmMWJmZTVkNTI5MTFmMTQ3YzhhYzkxMjciLCJpYXQiOjE1ODI5MDIyMDIsIm5iZiI6MTU4MjkwMjIwMiwiZXhwIjoxNjE0NTI0NjAyLCJzdWIiOiIxMCIsInNjb3BlcyI6W119.XWJcsbhgOQXqk-OrjKaRMRouo5AS4TkniyShH50O8K8KjaJYHP9Ltm3eMCpqarZpaBVucnsSKKimVVT9c1AD-Iq5n8AqZ3Mhgbh6Ik5-VqMAs89mLBwWj8seh_hgUmS0AqZMxUvkzZDpaU7Ub_EtoBUQ6l7up2tNXrA12mvg57LpvibWl6tXVLI2cBlEvNoTY3DPEjLFKMkdela7bhkoh4OAtJAnv1iNspuxcuhHp4PfgWlmaVGn4HdyfchNDJdSiWuiYy1LbRzpb9gdmmZtrDa--OfVRxodzE9sVIrLWXD_RRldejqyarbSke88ucMlALgCbBL88r00X2LEAXq565_s7ILbqEfVh1YN9ehfP8kCM9bf_Yop4G9QxgkO_xEhcv-Sj72rUph6TgS68QjEXculgizeVRTeCgW5X07UxCxy12jGuZMq3JjYU_kOmF1Sr79KSSZnFe27_f1kjbgEGSVwVKq_R4HcmM9ZGazpfbRPqaZnjUl3H5_0YAa7hZh0P1MYcJywx0tdY3inkZFBXhz1_3Xt6sULqlFRS4Lh0hP0o2E5jrCtVmeKGTgUvvbumEVyKpisjzpQK08i-rMSnYXSUbI6JNXc9z3PVgWzVt1lAdG66xNci7JQ3gdIoM4cQFBcGI8qQmfRMjvzXmmvoWY_hottmtOSK9AV_AP4zSw"
+        expires_at:
+          type: string
+          example: "2021-10-01T12:00:00+02:00"
     notifications:
       type: object
       properties:
@@ -1187,23 +1254,25 @@ components:
             $ref: '#/components/schemas/Status'
         first_page_url:
           type: string
-          example: "https://api.traewelling.de/v0/statuses?page=1"
+          example: "https://traewelling.de/api/v0/statuses?page=1"
         from:
           type: integer
           example: 1
           description: Frist element on page
         next_page_url:
           type: string
-          example: "https://api.traewelling.de/v0/statuses?page=2"
+          example: "https://traewelling.de/api/v0/statuses?page=2"
+          nullable: true
         path:
           type: string
-          example: "https://api.traewelling.de/v0/statuses"
+          example: "https://traewelling.de/api/v0/statuses"
         per_page:
           type: integer
           example: 15
         prev_page_url:
           type: string
           example: null
+          nullable: true
         to:
           type: integer
           example: 15
@@ -1236,23 +1305,25 @@ components:
                 $ref: '#/components/schemas/User'
         first_page_url:
           type: string
-          example: "https://api.traewelling.de/v0/statuses/1/likes?page=1"
+          example: "https://traewelling.de/api/v0/statuses/1/likes?page=1"
         from:
           type: integer
           example: 1
           description: Frist element on page
         next_page_url:
           type: string
-          example: "https://api.traewelling.de/v0/statuses/1/likes?page=2"
+          example: "https://traewelling.de/api/v0/statuses/1/likes?page=2"
+          nullable: true
         path:
           type: string
-          example: "https://api.traewelling.de/v0/statuses"
+          example: "https://traewelling.de/api/v0/statuses"
         per_page:
           type: integer
           example: 15
         prev_page_url:
           type: string
           example: null
+          nullable: true
         to:
           type: integer
           example: 15
@@ -1283,6 +1354,7 @@ components:
           type: string
           maxLength: 280
           example: "This is my first checkin!"
+          nullable: true
         type:
           type: string
           example: "hafas"
@@ -1291,10 +1363,10 @@ components:
           nullable: true
           example: 1
         likes_count:
-          type: string
+          type: integer
           example: "15"
           description: Show how many accounts liked this status
-        liked:
+        favorited:
           type: boolean
           example: true
           description: Shows whether the user has liked this status.
@@ -1316,15 +1388,21 @@ components:
           type: string
           example: "jdoe"
         train_distance:
+          type: string
+          format: float
+          example: "454.59"
+        train_duration:
+          type: string
+          format: integer
+          example: "317"
+        points:
+          type: string
+          format: integer
+          example: "66"
+        averageSpeed:
           type: number
           format: float
-          example: 454.59
-        train_duration:
-          type: integer
-          example: 317
-        points:
-          type: integer
-          example: 66
+          example: 100.5678954
     db_rest_stopover:
       type: object
       properties:
@@ -1442,9 +1520,10 @@ components:
               type: string
               description: actually array but almost always empty. Don't know what it does.
             delay:
-              type: string
+              type: integer
               example: "60"
               description: Delay in seconds
+              nullable: true
             platform:
               type: string
     hafas_location:
@@ -1511,6 +1590,7 @@ components:
         delay:
           type: integer
           example: "0"
+          nullable: true
         hafas_trip:
           $ref: '#/components/schemas/hafas_trip'
     hafas_trip:
@@ -1543,6 +1623,7 @@ components:
         delay:
           type: integer
           example: "0"
+          nullable: true
     event:
       type: object
       nullable: true

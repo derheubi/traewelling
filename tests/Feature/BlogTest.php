@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Blogpost;
+use App\Models\Blogpost;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use function substr_count;
@@ -37,12 +37,12 @@ class BlogTest extends TestCase
      * Test a Category page.
      */
     public function testCategoryPage() {
-        $response = $this->get(route('blog.category', ['cat' => 'Fehlerbehebung']));
+        $response = $this->get(route('blog.category', ['category' => 'Fehlerbehebung']));
         $response->assertSuccessful(); // There is at least one post with category `Fehlerbehebung`.
         $this->assertNotEquals($this->getBlogpostsCount($response), 0);
 
         // We expect to see a page title with the expected category name
-        $response->assertSee('<h1><i class="fa fa-tag pr-2"></i>Fehlerbehebung</h1>');
+        $response->assertSee('<h1><i class="fa fa-tag pr-2"></i>Fehlerbehebung</h1>', false);
 
         // This is likely to fail when we start to use the TAG icon with Category names in our blog posts.
         // In this case, please get add a space or a zero-width space (&#x200b;) between those words.
@@ -64,7 +64,7 @@ class BlogTest extends TestCase
      * If the requested category does not have any posts, we expect a 404 Not Found error.
      */
     public function testCategoryEmpty() {
-        $response = $this->get(route('blog.category', ['cat' => 'non-existing-category']));
+        $response = $this->get(route('blog.category', ['category' => 'non-existing-category']));
         $response->assertStatus(404);
         $response->assertSee('Not Found');
     }
@@ -77,7 +77,7 @@ class BlogTest extends TestCase
         BlogPost::all()->map(function($blogpost) {
             $response = $this->get(route('blog.show', ['slug' => $blogpost->slug]));
             $response->assertOk();
-            $response->assertSee("<h3 class=\"mb-0\">" . e($blogpost->title) . "</h3>");
+            $response->assertSee("<h3 class=\"mb-0\">" . e($blogpost->title) . "</h3>", false);
         });
     }
 

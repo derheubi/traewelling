@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'Europe/berlin',
+    'timezone' => 'Europe/Berlin',
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +168,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
+        //Barryvdh\Debugbar\ServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
 
         /*

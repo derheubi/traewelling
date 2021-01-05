@@ -3,7 +3,7 @@ node_modules/
 npm-debug.log
 
 # Profile pictures
-public/uploads/avatars
+public/uploads/avatars/*
 !public/uploads/avatars/user.jpg
 
 # Laravel 4 specific
@@ -42,6 +42,8 @@ Homestead.json
 .idea/**/contentModel.xml
 
 # Sensitive or high-churn files
+.idea/dataSources.xml
+.idea/dataSources.local.xml
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
@@ -111,4 +113,9 @@ fabric.properties
 # End of https://www.gitignore.io/api/phpstorm
 
 
-artisan
+public/js/admin.js
+public/js/app.js
+public/css/admin.css
+public/css/app.css
+.phpunit.result.cache
+public/css/welcome.css
